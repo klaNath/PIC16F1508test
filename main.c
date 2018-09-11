@@ -32,6 +32,7 @@
 
 #include <xc.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include "SSD1306tiny.h"
 #include "I2CMaster.h"
 
@@ -55,13 +56,23 @@ void __interrupt() ISR(void){
 }
 
 void main(void) {
+    char s;
     init_system();
     init_port();
     init_timer0();
     init_I2C();
     initDisplay();
     clearDisplay();
-    put_0_Display();
+    for(uint8_t i = 0; i < 10; i++){
+        //itoa(&s, i, 10);
+        s = (char)(i + 0x30);
+        putChar_Display(i, 0, &s);
+    }
+    for(uint8_t i = 0; i < 10; i++){
+        //itoa(&s, i, 10);
+        s = (char)(i + 0x41);
+        putChar_Display(i, 2, &s);
+    }
     while(1){
         while(Tm0_OF < 4){
             asm("nop");

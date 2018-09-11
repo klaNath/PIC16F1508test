@@ -63,20 +63,19 @@ void clearDisplay(void){
     }
 }
 
-void put_0_Display(void){
-    uint8_t colnum, pagenum = 0;
+void putChar_Display(uint8_t position_x, uint8_t position_y, char * s){
     ssd1306_command(SSD1306_COLUMNADDR);
-    ssd1306_command(0);
-    ssd1306_command(FONT_WIDTH-1);
+    ssd1306_command(position_x * FONT_WIDTH);
+    ssd1306_command((position_x + 1) * FONT_WIDTH - 1);
     ssd1306_command(SSD1306_PAGEADDR);
-    ssd1306_command(0); // Page start address (0 = reset)
-    ssd1306_command(6); // Page end address
-    for (uint16_t i=0; i<(FONT_WIDTH*FONT_HEIGHT/8); i++) {
+    ssd1306_command(position_y); // Page start address (0 = reset)
+    ssd1306_command(position_y + (FONT_HEIGHT / 8) - 1); // Page end address
+    for (uint16_t i=0; i<FONT_BYTES; i++) {
       // send a bunch of data in one xmission
       start_I2C(SSD1306_ADDR, 0);
       send_I2C(0x40);
-      for (uint8_t x=0; x<38; x++) {
-        send_I2C(font_0[i]);
+      for (uint8_t x=0; x<FONT_BYTES; x++) {
+        send_I2C(font_0[(uint16_t)(i + (uint16_t)((uint8_t)*s * FONT_BYTES))]);
         i++;
       }
       i--;
