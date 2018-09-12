@@ -36,7 +36,7 @@
 #include "SSD1306tiny.h"
 #include "I2CMaster.h"
 
-#define _XTAL_FREQ 4000000
+#define _XTAL_FREQ 16000000
 
 void init_port(void);
 void init_system(void);
@@ -47,7 +47,6 @@ uint8_t DispInvert = 1;
 
 void __interrupt() ISR(void){
     INTCONbits.GIE = 0;
-    //TODO: write something routine
     if(INTCONbits.TMR0IF == 1){
         INTCONbits.TMR0IF = 0;
         Tm0_OF++;
@@ -61,20 +60,25 @@ void main(void) {
     init_port();
     init_timer0();
     init_I2C();
+    __delay_ms(500);
     initDisplay();
     clearDisplay();
     for(uint8_t i = 0; i < 10; i++){
         //itoa(&s, i, 10);
         s = (char)(i + 0x30);
-        putChar_Display(i, 0, &s);
+        putChar_Display(i, 0, s);
     }
     for(uint8_t i = 0; i < 10; i++){
         //itoa(&s, i, 10);
         s = (char)(i + 0x41);
-        putChar_Display(i, 2, &s);
+        putChar_Display(i, 2, s);
     }
+    
+    char name[11] = "KLAMATH.JP";
+    putString_Display(0, 2, name);
+    
     while(1){
-        while(Tm0_OF < 4){
+        while(Tm0_OF < 16){
             asm("nop");
             asm("nop");
             asm("nop");
@@ -105,7 +109,7 @@ void init_port(void){
 }
 
 void init_system(void){
-    OSCCON = 0b01101010;
+    OSCCON = 0b01111010;
     OPTION_REG = 0b01111111;
     APFCONbits.CLC1SEL = 1;
     INTCON = 0b10000000;

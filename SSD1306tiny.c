@@ -63,7 +63,7 @@ void clearDisplay(void){
     }
 }
 
-void putChar_Display(uint8_t position_x, uint8_t position_y, char * s){
+void putChar_Display(uint8_t position_x, uint8_t position_y, char s){
     ssd1306_command(SSD1306_COLUMNADDR);
     ssd1306_command(position_x * FONT_WIDTH);
     ssd1306_command((position_x + 1) * FONT_WIDTH - 1);
@@ -75,12 +75,33 @@ void putChar_Display(uint8_t position_x, uint8_t position_y, char * s){
       start_I2C(SSD1306_ADDR, 0);
       send_I2C(0x40);
       for (uint8_t x=0; x<FONT_BYTES; x++) {
-        send_I2C(font_0[(uint16_t)(i + (uint16_t)((uint8_t)*s * FONT_BYTES))]);
+        send_I2C(font_0[(uint16_t)(i + (uint16_t)((uint8_t)s * FONT_BYTES))]);
         i++;
       }
       i--;
       stop_I2C();
     }
+}
+
+uint8_t putString_Display(uint8_t position_x, uint8_t position_y, char * s){
+    uint8_t charLength = 0;
+    char * s_temp = s;
+    while(*s_temp){
+        charLength++;
+        s_temp++;
+    }
+    
+    if(position_x * FONT_WIDTH * charLength > 128-FONT_WIDTH
+            | position_y * FONT_HEIGHT / 8 > 8 - FONT_HEIGHT / 8){
+        return 1;
+    }
+    
+    while(charLength){
+        putChar_Display(position_x++, position_y * FONT_HEIGHT / 8, *s++);
+        charLength--;
+    }
+    
+    return 0;
 }
 
 void initDisplay(){

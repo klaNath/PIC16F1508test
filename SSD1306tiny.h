@@ -24,7 +24,8 @@ void ssd1306_command(uint8_t);
 void invertDisplay(uint8_t);
 void initDisplay(void);
 void clearDisplay(void);
-void putChar_Display(uint8_t, uint8_t, char *);
+void putChar_Display(uint8_t, uint8_t, char);
+uint8_t putString_Display(uint8_t, uint8_t, char * );
 
 #include <xc.h> // include processor files - each processor file is guarded.  
 #define SSD1306_ADDR 0x3C

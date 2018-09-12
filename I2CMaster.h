@@ -14,8 +14,8 @@ void init_I2C(void);
 uint8_t send_I2C(uint8_t);
 uint8_t start_I2C(uint8_t, uint8_t);
 void checkIdle_I2C(uint8_t);
-void stop_I2C();
-void isr_I2C();
+void stop_I2C(void);
+void isr_I2C(void);
 
 #endif	/* I2CMASTER_H */
 
