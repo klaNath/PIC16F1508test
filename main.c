@@ -35,6 +35,7 @@
 #include <stdlib.h>
 #include "SSD1306tiny.h"
 #include "I2CMaster.h"
+#include "mcc_generated_files/mcc.h"
 
 #define _XTAL_FREQ 16000000
 
