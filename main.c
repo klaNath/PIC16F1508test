@@ -10,7 +10,7 @@
 // 'C' source line config statements
 
 // CONFIG1
-#pragma config FOSC = INTOSC    // Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
+#pragma config FOSC = HS    // Oscillator Selection Bits (INTOSC oscillator: I/O function on CLKIN pin)
 #pragma config WDTE = OFF       // Watchdog Timer Enable (WDT disabled)
 #pragma config PWRTE = OFF      // Power-up Timer Enable (PWRT disabled)
 #pragma config MCLRE = ON       // MCLR Pin Function Select (MCLR/VPP pin function is MCLR)
@@ -36,7 +36,7 @@
 #include "SSD1306tiny.h"
 #include "I2CMaster.h"
 
-#define _XTAL_FREQ 4000000
+#define _XTAL_FREQ 16000000
 
 void init_port(void);
 void init_system(void);
@@ -68,20 +68,22 @@ void main(void) {
         s = (char)(i + 0x30);
         putChar_Display(i, 0, &s);
     }
-    for(uint8_t i = 0; i < 10; i++){
-        //itoa(&s, i, 10);
-        s = (char)(i + 0x41);
-        putChar_Display(i, 2, &s);
+    for(uint8_t j = 1; j < 4; j++){
+            for (uint8_t i = 0; i < 16; i++) {
+                //itoa(&s, i, 10);
+                s = (char) (i + 0x41);
+                        putChar_Display(i, j << 1, &s);
+            }
     }
     while(1){
-        while(Tm0_OF < 4){
+        while(Tm0_OF < 32){
             asm("nop");
             asm("nop");
             asm("nop");
             asm("nop");
         }
         Tm0_OF = 0;
-        LATBbits.LATB7 = (uint8_t)~LATBbits.LATB7;
+        //LATBbits.LATB7 = (uint8_t)~LATBbits.LATB7;
         invertDisplay(DispInvert);
         DispInvert = (uint8_t)~DispInvert;
     }

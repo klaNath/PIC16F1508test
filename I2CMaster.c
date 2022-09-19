@@ -13,7 +13,7 @@ uint8_t AckCheck = 0;
 void init_I2C(void){
      SSP1STAT= 0b10000000;
      SSP1CON1= 0b00101000;
-     SSP1ADD = 0x03; // Fosc = 4MHz, SCL = 250kHz
+     SSP1ADD = 0x0F; // Fosc = 16MHz, SCL = 250kHz
      INTCONbits.GIE = 1;
      INTCONbits.PEIE = 1;
      PIE1bits.SSP1IE = 1; 
